@@ -1,0 +1,72 @@
+Virus,Bat Species,Positive,Negative,Tested,Pulses,Births
+Marburgvirus,Epomops franqueti,2,677,679,2,1
+Marburgvirus,Hypsignathus monstrosus,1,102,103,2,1
+Marburgvirus,Miniopterus pusillus,1,176,177,NA,NA
+Marburgvirus,Rhinolophus eloquens,20,189,209,NA,NA
+Marburgvirus,Rousettus aegyptiacus,21,208,229,2,1
+Marburgvirus,Rousettus aegyptiacus,35,121,156,2,1
+Marburgvirus,Rousettus aegyptiacus,13,533,546,2,1
+Marburgvirus,Rousettus aegyptiacus,29,409,438,2,1
+Marburgvirus,Rousettus aegyptiacus,250,1372,1622,2,1
+Marburgvirus,Hipposideros caffer,0,10,10,1,0
+Marburgvirus,Hipposideros commersoni,0,16,16,1,0
+Marburgvirus,Nycteris hispida,0,1,1,1,0
+Marburgvirus,Lissonycteris angolensis,0,3,3,2,1
+Marburgvirus,Miniopterus inflatus,0,34,34,1,0
+Reston ebolavirus,Cynopterus sphinx,2,0,2,2,1
+Reston ebolavirus,Hipposideros pomona,3,34,37,1,0
+Reston ebolavirus,Miniopterus schreibersii,2,21,23,1,0
+Reston ebolavirus,Myotis pilosus,4,79,83,NA,NA
+Reston ebolavirus,Pipistrellus pipistrellus,4,31,35,1,0
+Reston ebolavirus,Rousettus amplexicaudatus,5,11,16,2,1
+Reston ebolavirus,Rousettus leschenaultii,11,115,126,2,1
+Reston ebolavirus,Scotophilus kuhli,1,24,25,1,0
+Reston ebolavirus,Rousettus leschenaultii,15,126,141,2,1
+Reston ebolavirus,Hipposideros cineraceus,0,111,111,NA,NA
+Reston ebolavirus,Hipposideros armiger,0,41,41,1,0
+Reston ebolavirus,Hipposideros larvatus,0,21,21,1,0
+Reston ebolavirus,Rhinolophus affinis,1,68,69,1,0
+Reston ebolavirus,Rhinolophus ferrumequinum,0,15,15,1,0
+Reston ebolavirus,Rhinolophus sinicus,0,6,6,1,0
+Reston ebolavirus,Rhinolophus pusillus,0,14,14,1,0
+Reston ebolavirus,Rhinolophus pearsonii,0,3,3,1,0
+Reston ebolavirus,Myotis davidii,0,5,5,1,0
+Reston ebolavirus,Myotis chinensis,0,6,6,NA,NA
+Reston ebolavirus,Myotis daubentonii,0,24,24,1,0
+Reston ebolavirus,Myotis fimbriatus,0,2,2,NA,NA
+Reston ebolavirus,Eonycteris spelaea,0,5,5,2,1
+Reston ebolavirus,Cynopterus brachyotis,0,35,35,2,1
+Reston ebolavirus,Ptenochirus jagori,0,38,38,2,1
+Reston ebolavirus,Haplonycteris fischeri,0,6,6,1,0
+Reston ebolavirus,Macroglossus minimur,0,2,2,2,1
+Reston ebolavirus,Rhinolophus rufus,0,2,2,1,0
+Reston ebolavirus,Rhinolophus arcuatus,0,1,1,1,0
+Reston ebolavirus,Emballonura alecto,0,9,9,NA,NA
+Reston ebolavirus,Pipistrellus javanicus,0,2,2,3,1
+Reston ebolavirus,Scotophilus kuhlii,0,5,5,1,0
+Reston ebolavirus,Miniopterus australis,0,8,8,1,0
+Reston ebolavirus,Miniopterus schreibersii,0,8,8,1,0
+Reston ebolavirus,Miniopterus tristis,0,1,1,1,0
+Reston ebolavirus,Hipposideros diadema,0,1,1,1,0
+Reston ebolavirus,Miniopterus macrotarsus,0,1,1,NA,NA
+Zaire ebolavirus,Eidolon helvum,1,261,262,1,0
+Zaire ebolavirus,Epomops franqueti,36,769,805,2,1
+Zaire ebolavirus,Epomops franqueti,20,335,355,2,1
+Zaire ebolavirus,Epomops franqueti,5,365,370,2,1
+Zaire ebolavirus,Epomops franqueti,10,17,27,2,1
+Zaire ebolavirus,Epomops franqueti,8,9,17,2,1
+Zaire ebolavirus,Epomophorus gambianus,14,23,37,2,1
+Zaire ebolavirus,Hypsignathus monstrosus,9,116,125,2,1
+Zaire ebolavirus,Hypsignathus monstrosus,9,35,44,2,1
+Zaire ebolavirus,Hypsignathus monstrosus,4,63,67,2,1
+Zaire ebolavirus,Hypsignathus monstrosus,7,9,16,2,1
+Zaire ebolavirus,Hypsignathus monstrosus,4,13,17,2,1
+Zaire ebolavirus,Micropteropus pusillus,4,193,197,2,1
+Zaire ebolavirus,Myonycteris torquata,19,554,573,2,1
+Zaire ebolavirus,Myonycteris torquata,1,322,323,2,1
+Zaire ebolavirus,Myonycteris torquata,9,222,231,2,1
+Zaire ebolavirus,Myonycteris torquata,4,54,58,2,1
+Zaire ebolavirus,Rousettus aegyptiacus,24,283,307,2,1
+Zaire ebolavirus,Rousettus leschenaultii,15,126,141,2,1
+Zaire ebolavirus,Nanonycteris veldkampii,1,3,4,6,1
+Zaire ebolavirus,Epomops buettikoferi,0,1,1,NA,NA
