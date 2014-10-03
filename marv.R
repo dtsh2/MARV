@@ -14,7 +14,7 @@ betaM<-mu/infprev*(R0-1)
 ## pomp test run lbv
 getwd()
 setwd("~/GitHub/MARV") # revise as necessary
-setwd("C:/Users/dtshayma/Dropbox")
+# setwd("C:/Users/dtshayma/Dropbox")
 library(pomp)
 
 #Compiling C code and loading the dll
@@ -1099,7 +1099,8 @@ b <-function(t=1,s=par.plot[17,2],omega=2,phi=0,k=par.plot[17,1]){ ## adding bir
   x<-cos(pi*omega*t-phi)
   k*(1/sqrt(kappa*pi)*exp(-x^2/kappa))
 }
-plot(b,xlab="",ylab="",xaxt="n",yaxt="n",ylim=c(0,15),lwd=2,bty="n")
+plot(b,xlab="",ylab="",#xaxt="n",yaxt="n",
+     ylim=c(0,15),lwd=2,bty="n")
 
 #b <-function(t=1,s=par.plot[15,2],omega=2,phi=0,k=par.plot[15,1]){ ## adding birth pulse
 #  kappa<-1/s
@@ -1136,5 +1137,5 @@ legend(x=0.25,y=16,lty=rep(1:2,2),lwd=rep(2,4),
                            paste(omega==2, ", k = 1.44, s = 7"),paste(omega==2, ", k = 1.50, s = 167"))),
        bty="n",col=c("darkgrey","darkgrey",1,1),cex=0.8)
 
-mtext("1 year",side=1,outer=F)
+mtext("1 year",side=1,outer=F,line=3)
 

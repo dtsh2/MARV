@@ -286,3 +286,18 @@ barplot2(single.res.all$Sp, plot.ci=TRUE, ci.l=single.res.all$L, ci.u=single.res
          ylim=c(0,1),main="",ci.lty=2,names.arg=c(1:24))
 mtext('b',font=2,side=3,line=2,at=-4,cex=1)
 
+## test using species names
+par(omi=c(1.5,0.2,0.2,0.2))
+par(mai=c(1.5,1.5,0.5,0.5))
+par(mar=c(4, 4, 4, 4) + 0.1)
+par(mfrow=c(1,2))
+par(las=2)
+barplot2(double.res.all$Sp, plot.ci=TRUE, ci.l=double.res.all$L, ci.u=double.res.all$U,
+         ylim=c(0,1),main="",ci.lty=2,names.arg=double$Bat.Species,cex.names=0.6)
+par(las=1)
+mtext('a',font=2,side=3,line=2,at=-4,cex=1)
+par(las=2)
+barplot2(single.res.all$Sp, plot.ci=TRUE, ci.l=single.res.all$L, ci.u=single.res.all$U,
+         ylim=c(0,1),main="",ci.lty=2,names.arg=single$Bat.Species,cex.names=0.6)
+par(las=1)
+mtext('b',font=2,side=3,line=2,at=-4,cex=1)
