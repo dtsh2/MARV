@@ -42,10 +42,12 @@ void sir_euler_simulator (double *x, const double *p,
 			  int covdim, const double *covar, 
 			  double t, double dt)
 {
-  int nrate = 29; 			// number of rates
+  int nrate = 19; 			// number of rates
   double rate[nrate];		// transition rates
   double trans[nrate];		// transition numbers
   double N = x[0]+x[1]+x[2]+x[3]+x[4]+x[5]+x[6]+x[7];		// population size
+  double NAd = x[4]+x[5]+x[6]+x[7];		// Adult population size
+  double NJu = x[0]+x[1]+x[2]+x[3];		// Juvenile population size
   void (*reulmult)(int,double,double*,double,double*);
 
   // to evaluate the basis functions and compute the transmission rate, use some of 
@@ -59,9 +61,9 @@ const double pi = 3.14159265359;
 // in C --- pow(a,b) to do a^b 
 
   // compute the transition rates
-  rate[0] = (KAPPA*(1/sqrt((1/S)*pi)*exp(-pow((cos(pi*OMEGA*t-PHI)),2)/(1/S))))*(N);		// approx delta function birth into susceptible class
+  rate[0] = (KAPPA*(1/sqrt((1/S)*pi)*exp(-pow((cos(pi*OMEGA*t-PHI)),2)/(1/S))))*(NAd);		// approx delta function birth into susceptible class
   rate[1] = EPSILON;		// aging from juv to ad
-  rate[2] = BETA*(INFJ+INFA)/N;			// sus to exposed- infectious route
+  rate[2] = BETA*(INFJ+INFA);			// sus to exposed- infectious route
   rate[3] = DELTA*(N/K);			// density dept mortality - Juvenile   
   rate[4] = SIGMA;		// incubation rate
   rate[5] = DELTA*(N/K);			// density dept mortality - Juvenile 
@@ -70,8 +72,8 @@ const double pi = 3.14159265359;
   rate[8] = EPSILON;		// aging from juv to ad
   rate[9] = DELTA*(N/K);			// density dept mortality - Juvenile
   rate[10] = EPSILON;		// aging from juv to ad
-  rate[11] = MU*(N/K);			// density dept mortality - Adult
-  rate[12] = BETA*(INFJ+INFA)/N;			// sus to exposed- infectious route
+  rate[11] = DELTA*(N/K);			// density dept mortality - Adult
+  rate[12] = BETA*(INFJ+INFA);			// sus to exposed- infectious route
   rate[13] = MU*(N/K);			// density dept mortality - Adult
   rate[14] = SIGMA;		// incubation rate
   rate[15] = MU*(N/K);			// density dept mortality - adult
@@ -85,22 +87,22 @@ const double pi = 3.14159265359;
   (*reulmult)(3,EXPJ,&rate[4],dt,&trans[4]); // euler-multinomial exits from EJ class
   (*reulmult)(3,INFJ,&rate[7],dt,&trans[7]); // euler-multinomial exits from INFJ class
   (*reulmult)(2,RECJ,&rate[10],dt,&trans[10]); // euler-multinomial exits from RECJ class
-  (*reulmult)(2,SUSA,&rate[11],dt,&trans[11]); // euler-multinomial exits from SUSA class
-  (*reulmult)(2,EXPA,&rate[13],dt,&trans[13]); // euler-multinomial exits from EA class
-  (*reulmult)(2,INFA,&rate[15],dt,&trans[15]); // euler-multinomial exits from INFA class
-  (*reulmult)(1,RECA,&rate[17],dt,&trans[17]); // euler-multinomial exits from RECA class
+  (*reulmult)(2,SUSA,&rate[12],dt,&trans[12]); // euler-multinomial exits from SUSA class
+  (*reulmult)(2,EXPA,&rate[14],dt,&trans[14]); // euler-multinomial exits from EA class
+  (*reulmult)(2,INFA,&rate[16],dt,&trans[16]); // euler-multinomial exits from INFA class
+  (*reulmult)(1,RECA,&rate[18],dt,&trans[18]); // euler-multinomial exits from RECA class
 
   // balance the equations
   SUSJ += trans[0]-trans[1]-trans[2]-trans[3]; // IN births; OUT juv mort, aging, inf
-  EXPJ += trans[4]-trans[1]-trans[13]; // IN inf from both SUSJ classes exposed; OUT incubation and juv mort
-  INFJ += trans[13]-trans[17]; // IN incubation; OUT dis induced mortality
-  RECJ += trans[15]-trans[18]-trans[19]; // IN seroconversion; OUT aging and juv mortality
-  SUSA += trans[3]+trans[9]-trans[20]-trans[21]-trans[22]; // IN aging from both SUSJ classes; OUT adult mort, inf * 2 classes
-  EIA += trans[21]-trans[23]-trans[24]; // IN from adult SUS exposed; OUT incubation and adult mortality
-  INFA += trans[24]-trans[27]; // IN from incubation; OUT dis induced mortality
-  RECA += trans[26]+trans[18]-trans[28]; // IN from serconverstion & aging; OUT from death
-  PREVA = INFA/(SUSA+INFA+EXPA+RECA); // adult prevalence
-  PREVJ = INFJ/(SUSJ+EXPJ+INFJ+RECJ); // juvenile prevalence
-  SPA = RECA/(SUSA+EXPA+INFA+RECA); // adult seroprevalence
-  SPJ = RECJ/(SUSJ+EXPJ+INFJ+RECJ); // juvenile seroprevalence
+  EXPJ += trans[2]-trans[4]-trans[5]-trans[6]; // IN inf; OUT incubation and juv mort, aging
+  INFJ += trans[4]-trans[7]-trans[8]-trans[9]; // IN / OUT
+  RECJ += trans[7]-trans[10]-trans[11]; // IN /OUT 
+  SUSA += trans[1]-trans[12]-trans[13]; // IN / OUT
+  EXPA += trans[12]+trans[6]-trans[14]-trans[15]; // IN /OUT
+  INFA += trans[14]+trans[8]-trans[16]-trans[17]; // IN / OUT
+  RECA += trans[16]+trans[10]-trans[18]; // IN from serconverstion & aging; OUT from death
+  PREVA = INFA/(NAd); // adult prevalence
+  PREVJ = INFJ/(NJu); // juvenile prevalence
+  SPA = RECA/(NAd); // adult seroprevalence
+  SPJ = RECJ/(NJu); // juvenile seroprevalence
 }
