@@ -979,12 +979,13 @@ plot.prcc = function(prcc.obj,alpha=0.05,...){
 }
 
 # prcc with stoch simulation results...
-res<-cbind(#X[,1],
+res<-cbind(X[,1],
            #X[,2],
            #X[,3],
            # X[,4], # pop extinction
            X[,5])
-dimnames(res)[[2]]<-c(#"Population",
+#res<-as.list(res)
+dimnames(res)[[2]]<-c("Population",
                       #"Prevalence",
                       #"Adult seroprevalence",
                       #"Population persistence",
@@ -994,11 +995,11 @@ dimnames(res)[[2]]<-c(#"Population",
 
 results=prcc(par.mat=hypercube,model.output=res ## results matrix here...
                ,routine="blower" # NB removed par names so uses symbols, add [par.names="",]
-             ,output.names=c(#"Population size",
+             ,output.names=c("Population size",
                            # "Prevalence",
                            # "Adult seroprevalence",
-                           # "Population persistence",
-                             ""##"MARV persistence"
+                            #"Population persistence",
+                             "Pathogen persistence"
                             ))
 
 plot.prcc(results,ylim=c(-1,1),cex.sub=1.2)
