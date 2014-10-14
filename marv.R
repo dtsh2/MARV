@@ -68,16 +68,16 @@ params <- c(
   PREVA.0= 0.025, PREVJ.0=0.025 ,
   SPA.0=0.25,SPJ.0=0.25) # this adds to the initial conditions given the state variables
 
-sim <- simulate(seir,params=c(params),#seed=3493885L,
-                nsim=100,states=T,obs=F,as.data.frame=T) # 
+sim <- simulate(seir,params=c(params),seed=3493895L,
+                nsim=500,states=T,obs=F,as.data.frame=T) # 
 class(seir) # pomp object
 class(sim) # data frame - even if I remove "as.data.frame" in the above code (sim)
 #sim <- simulate(sir,params=c(params),nsim=1,states=T,obs=F)#,as.data.frame=T) # saves as an array
 # pf<-pfilter(sim,params=c(params),Np=1000) # won't work, because this is a data frame, not pomp object
 
-inf.res.a<-matrix(sim$INFA,ncol=100)
-inf.res.j<-matrix(sim$INFJ,ncol=100)
-susj.res.j<-matrix(sim$SUSJ,ncol=100)
+inf.res.a<-matrix(sim$INFA,ncol=500)
+inf.res.j<-matrix(sim$INFJ,ncol=500)
+susj.res.j<-matrix(sim$SUSJ,ncol=500)
 
 par(mfrow=c(1,1))
 #matplot(inf.res.a,col="grey",pch=1,ylab="Numbers",xlab="Time",xaxt="n")
@@ -85,25 +85,25 @@ par(mfrow=c(1,1))
 #matplot(inf.res.j,col="grey",pch=1,ylab="Numbers",xlab="Time",xaxt="n")
 #lines(rowMeans(inf.res.j))
 
-matplot(susj.res.j[8000:9000,],col="darkgrey",type="l",ylab="Numbers",xlab="Time",xaxt="n")
+matplot(susj.res.j[8000:9000,],col="blue",type="l",ylab="Numbers",xlab="Days")#,xaxt="n")
 #lines(rowMeans(inf.res.j[8000:9000,]))
 susj.res.j[susj.res.j == 0] <- NA
 lines(rowMeans(susj.res.j[8000:9000,],na.rm=T),col="white")
 
-matplot(inf.res.a[8000:9000,],col="lightgrey",type="l",#ylab="Numbers",xlab="Time",
+matplot(inf.res.a[8000:9000,],col="orange",type="l",#ylab="Numbers",xlab="Time",
         xaxt="n",add=T)
 #lines(rowMeans(inf.res.a[8000:9000,]))
 inf.res.a[inf.res.a == 0] <- NA
-lines(rowMeans(inf.res.a[8000:9000,],na.rm=T))#,col="white")
+lines(rowMeans(inf.res.a[8000:9000,],na.rm=T),col="red")
 
-matplot(inf.res.j[8000:9000,],col="black",type="l",#ylab="Numbers",xlab="Time",
+matplot(inf.res.j[8000:9000,],col="red",type="l",#ylab="Numbers",xlab="Time",
         xaxt="n",add=T)
 #lines(rowMeans(inf.res.a[8000:9000,]))
 inf.res.j[inf.res.j == 0] <- NA
 lines(rowMeans(inf.res.j[8000:9000,],na.rm=T),col="white")
 
-legend("topright", c("Juvenile","Adult"), fill = c("grey","black"), col = c("black","white"),
-       border = c("grey","black"), bty = "n")
+legend("topright", c("Juvenile susceptible","Adult infected","Juvenile infected"), fill = c("blue","orange","red"),
+       border = c("blue","orange","red"), bty = "n")
 
 #######################
 
