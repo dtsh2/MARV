@@ -85,7 +85,8 @@ par(mfrow=c(1,1))
 #matplot(inf.res.j,col="grey",pch=1,ylab="Numbers",xlab="Time",xaxt="n")
 #lines(rowMeans(inf.res.j))
 
-matplot(susj.res.j[8000:9000,],col="blue",type="l",ylab="Numbers",xlab="Days")#,xaxt="n")
+matplot(susj.res.j[8000:9000,],col="blue",type="l",ylab="Numbers",xlab="Years",xaxt="n")
+axis(side=1,at=seq(1,1000,by=(1000/(1000/365))),labels=c("22","23","24"))
 #lines(rowMeans(inf.res.j[8000:9000,]))
 susj.res.j[susj.res.j == 0] <- NA
 lines(rowMeans(susj.res.j[8000:9000,],na.rm=T),col="white")
@@ -102,8 +103,8 @@ matplot(inf.res.j[8000:9000,],col="red",type="l",#ylab="Numbers",xlab="Time",
 inf.res.j[inf.res.j == 0] <- NA
 lines(rowMeans(inf.res.j[8000:9000,],na.rm=T),col="white")
 
-legend("topright", c("Juvenile susceptible","Adult infected","Juvenile infected"), fill = c("blue","orange","red"),
-       border = c("blue","orange","red"), bty = "n")
+legend("topright", c("Juvenile susceptible","Juvenile infected","Adult infected"), fill = c("blue","red","orange"),
+       border = c("blue","red","orange"), bty = "n")
 
 #######################
 
@@ -534,6 +535,412 @@ mtext('d',font=2,side=3,line=1,at=-2,cex=1.2)
 mtext("P (persist)",side=2,outer=T)
 mtext("Population size",side=1,outer=T)
 
+##
+
+# test the changes in incubation period...
+## single birth pulse vs 2
+## 7 vs 21 day inf period
+
+nonVarying = matrix(c(
+  BETA=0.004506855,
+  MU=0.000510492,
+  DELTA=0.002312247,
+  #SIGMA=1/21,
+  #K=40000,
+  EPSILON=1/365,
+  TAU=1/7,
+  KAPPA=1.5/365,
+  S=14.35,
+  #OMEGA=1/365,
+  PHI=0.0,
+  SUSJ.0=37000,
+  EXPJ.0=1000,
+  INFJ.0=1000,
+  RECJ.0=1000,
+  SUSA.0=37000,
+  EXPA.0=1000,
+  INFA.0=1000,
+  RECA.0=1000,
+  PREVA.0= 0.025,
+  PREVJ.0=0.025 ,
+  SPA.0=0.025,
+  SPJ.0=0.025),
+  ncol=20,
+  nrow=40,
+  byrow=T) #binded with non-varying parameters
+
+
+dimnames(nonVarying)[[2]]=c("BETA","MU","DELTA",#"SIGMA",#"K",
+                            "EPSILON",
+                            "TAU","KAPPA","S",#"OMEGA",
+                            "PHI",
+                            "SUSJ.0","EXPJ.0","INFJ.0", "RECJ.0", "SUSA.0", "EXPA.0","INFA.0", "RECA.0","PREVA.0","PREVJ.0","SPA.0","SPJ.0") # naming non-varying columns
+
+## from other code
+
+sigmasetd=c(rep(1/7,40),rep(1/14,40),rep(1/21,40))
+Ksetd=seq(from = 100, to=200000, by =5000)
+omegasetd=rep(2/365,120)
+Ksetd=rep(Ksetd,3)
+nonVard=rbind(nonVarying,nonVarying,nonVarying)
+
+fullParamSets = cbind(nonVard,Ksetd,sigmasetd,omegasetd) # full parameter set
+#fullParamSets[,1] <- fullParamSets[,1]*fullParamSets[,29]
+head(fullParamSets)
+dim(fullParamSets)
+
+dimnames(fullParamSets)[[2]]=c("BETA", #1
+                               "MU", #2
+                               "DELTA", #3
+                               "EPSILON",
+                               "TAU", #
+                               "KAPPA", #
+                               "S", #
+                               #"OMEGA", #
+                               "PHI", #
+                               "SUSJ.0", #
+                               "EXPJ.0", #
+                               "INFJ.0", #
+                               "RECJ.0", #
+                               "SUSA.0", #
+                               "EXPA.0", #
+                               "INFA.0", #
+                               "RECA.0", #
+                               "PREVA.0", #
+                               "PREVJ.0", #
+                               "SPA.0", #
+                               "SPJ.0", #
+                               "K", #
+                               "SIGMA", #22
+                               "OMEGA") #23
+
+# order for pomp/C model:  
+BETA = fullParamSets[,1]
+MU = fullParamSets[,2]
+DELTA = fullParamSets[,3]
+SIGMA = fullParamSets[,22]
+EPSILON = fullParamSets[,4]
+TAU = fullParamSets[,5]
+KAPPA = fullParamSets[,6]
+S = fullParamSets[,7]
+OMEGA = fullParamSets[,23]
+PHI = fullParamSets[,8]
+SUSJ.0 = fullParamSets[,9]
+EXPJ.0 = fullParamSets[,10]
+INFJ.0 = fullParamSets[,11]
+RECJ.0 = fullParamSets[,12]
+SUSA.0 = fullParamSets[,13]
+EXPA.0 = fullParamSets[,14]
+INFA.0 = fullParamSets[,15]
+RECA.0 = fullParamSets[,16]
+PREVA.0 = fullParamSets[,17]
+PREVJ.0 = fullParamSets[,18]
+SPA.0 = fullParamSets[,19]
+SPJ.0 = fullParamSets[,20]
+K = fullParamSets[,21]
+
+paramset<-cbind(BETA,MU,DELTA,SIGMA,K,EPSILON,TAU,KAPPA,S,OMEGA,PHI,
+                SUSJ.0,EXPJ.0,INFJ.0, RECJ.0, SUSA.0,EXPA.0,INFA.0,RECA.0,PREVA.0,PREVJ.0,SPA.0,SPJ.0)
+######################################################################################
+
+## Calling requisite libraries for parallel computing
+
+#library(foreach)
+#library(doSNOW)
+
+#Setting up "parallel backend"
+
+#w<-makeCluster(3,type="SOCK") # makes the cluster, i.e. no of cores ABC = 8 cores, DEF = 12 see performance to see # of cores
+#registerDoSNOW(w) # 
+
+#Checks that the number of workers is set up correctly.
+
+#getDoParWorkers()
+
+#######################################################3
+results<-array(NA,dim=c(120,1,5))
+
+# for one parameter set....
+out1 <-simulate(seir,params=c(paramset[1,]),
+                seed=1493885L,nsim=100,states=T,obs=F,as.data.frame=T) #
+
+outres1 <- out1[seq(from=9126,to=912600,by=9126),] # select last #s
+N1 = array(0,c(100,5)) # same dimensions as No. runs * outputs I want
+for (i in 1:100){ # each stochastic run
+  N1[i,1]<-sum(outres1[i,1:8]) # pop pers
+  N1[i,2]<-(sum(outres1[i,3],outres1[i,7])/sum(outres1[i,1:8]))*100 # prevalence; total
+  N1[i,3]<-((outres1[i,8])/(sum(outres1[i,5:8])))*100 # adult seroprevalence; total
+  N1[i,4]<-ifelse(sum(outres1[i,1:8])>0,1,0) # population extinct for each run
+  N1[i,5]<-ifelse(sum(outres1[i,3],outres1[i,7])>0,1,0) # pathogen extinction for each run
+}
+N1[is.na(N1)]<- 0
+## now average
+M1 = array(0,c(1,5))
+M1[1] = mean(N1[1:100,1]) # population size
+M1[2] = mean(N1[1:100,2]) # prevalence
+M1[3] = mean(N1[1:100,3]) # adult seroprevalence
+M1[4] = mean(N1[1:100,4]) # adult seroprevalence
+M1[5] = mean(N1[1:100,5]) # adult seroprevalence
+rm(out1)
+M1
+results[1,,]<-M1
+results[1,,]
+
+##########################################################33
+# for all parameter sets....
+results<-array(NA,dim=c(120,1,5))
+
+for (j in 1:length(paramset[,1])){
+  out <-simulate(seir,params=c(paramset[j,]),
+                 seed=1493885L,nsim=100,states=T,obs=F,as.data.frame=T) #
+  outres <- out[seq(from=9126,to=912600,by=9126),] # select last #s
+  N = array(0,c(100,5)) # same dimensions as No. runs * outputs I want
+  for (i in 1:100){ # each stochastic run
+    N[i,1]<-sum(outres[i,1:8])
+    N[i,2]<-(sum(outres[i,3],outres[i,7])/sum(outres[i,1:8]))*100 # prevalence; total
+    N[i,3]<-((outres[i,7])/(sum(outres[i,5:8])))*100 # adult seroprevalence; total
+    N[i,4]<-ifelse(sum(outres[i,1:8])>0,1,0) # population extinct for each run
+    N[i,5]<-ifelse(sum(outres[i,3],outres[i,7])>0,1,0) # pathogen extinction for each run
+  }
+  N[is.na(N)]<- 0
+  ## now average
+  M = array(0,c(1,5))
+  M[1] = mean(N[1:100,1]) # population size
+  M[2] = mean(N[1:100,2]) # prevalence
+  M[3] = mean(N[1:100,3]) # adult seroprevalence
+  M[4] = mean(N[1:100,4]) # mean pop extinction
+  M[5] = mean(N[1:100,5]) # mean path extinction
+  rm(out)
+  results[j,,]<-M
+}
+#
+#########################################################33
+
+#w<-makeCluster(1,type="SOCK") # return to one core
+
+############################################################3
+## need matrix of results...
+X<-aperm(results,c(1,2,3))
+dim(X)<-c(120,5)
+head(X)
+tail(X)
+
+par(omi=c(1,1,0.5,0.5))
+par(mai=c(0.8,0.8,0.8,0.8))
+
+par(mfrow=c(1,3))
+plot(X[1:40,1],X[1:40,5],pch=16,ylim=c(0,1),
+     #ylab="P[persist]",xlab="Population size",
+     col="grey25", cex.lab=1.2,ann=F)
+text(150000,0.8,expression(paste("birth pulse/yr"==2)))
+text(150000,0.6,expression(paste(1/sigma==7)))
+mtext('a',font=2,side=3,line=1,at=-2,cex=1.2)
+
+plot(X[41:80,1],X[41:80,5],pch=16,ylim=c(0,1),
+     #ylab="P[persist]",xlab="Population size",
+     col="grey25", cex.lab=1.2,ann=F)
+text(150000,0.8,expression(paste("birth pulse/yr"==2)))
+text(150000,0.6,expression(paste(1/sigma==14)))
+mtext('b',font=2,side=3,line=1,at=-2,cex=1.2)
+
+plot(X[81:120,1],X[81:120,5],pch=16,ylim=c(0,1),
+     #ylab="P[persist]",xlab="Population size",
+     col="grey25", cex.lab=1.2,ann=F)
+text(150000,0.8,expression(paste("birth pulse/yr"==2)))
+text(150000,0.6,expression(paste(1/sigma==21)))
+mtext('c',font=2,side=3,line=1,at=-2,cex=1.2)
+
+mtext("P (persist)",side=2,outer=T)
+mtext("Population size",side=1,outer=T)
+
+## surface plot of 2 pulses per year, fixed k, and varying incubation period and infectious period
+
+nonVarying = matrix(c(
+  BETA=0.004506855,
+  MU=0.000510492,
+  DELTA=0.002312247,
+  #SIGMA=1/21,
+  K=40000,
+  EPSILON=1/365,
+  #TAU=1/7,
+  KAPPA=1.5/365,
+  S=14.35,
+  OMEGA=2/365,
+  PHI=0.0,
+  SUSJ.0=37000,
+  EXPJ.0=1000,
+  INFJ.0=1000,
+  RECJ.0=1000,
+  SUSA.0=37000,
+  EXPA.0=1000,
+  INFA.0=1000,
+  RECA.0=1000,
+  PREVA.0= 0.025,
+  PREVJ.0=0.025 ,
+  SPA.0=0.025,
+  SPJ.0=0.025),
+  ncol=21,
+  nrow=300,
+  byrow=T) #binded with non-varying parameters
+
+
+dimnames(nonVarying)[[2]]=c("BETA","MU","DELTA",#"SIGMA",
+                            "K",
+                            "EPSILON",
+                            #"TAU",
+                            "KAPPA","S","OMEGA",
+                            "PHI",
+                            "SUSJ.0","EXPJ.0","INFJ.0", "RECJ.0", "SUSA.0", "EXPA.0","INFA.0", "RECA.0","PREVA.0","PREVJ.0","SPA.0","SPJ.0") # naming non-varying columns
+
+## from other code
+
+sigmasetv=1/7:21
+tausetv<-1/1:20
+infinc<-expand.grid(sigmasetv,tausetv)
+nonVard=rbind(nonVarying)
+
+fullParamSets = cbind(nonVard,infinc) # full parameter set
+#fullParamSets[,1] <- fullParamSets[,1]*fullParamSets[,29]
+head(fullParamSets)
+dim(fullParamSets)
+
+dimnames(fullParamSets)[[2]]=c("BETA", #1
+                               "MU", #2
+                               "DELTA", #3
+                               "K",#4
+                               "EPSILON",#5
+                               #"TAU", #
+                               "KAPPA", #6
+                               "S", #7
+                               "OMEGA", #8
+                               "PHI", #9
+                               "SUSJ.0", #10
+                               "EXPJ.0", #11
+                               "INFJ.0", #12
+                               "RECJ.0", #13
+                               "SUSA.0", #14
+                               "EXPA.0", #15
+                               "INFA.0", #16
+                               "RECA.0", #17
+                               "PREVA.0", #18
+                               "PREVJ.0", #19
+                               "SPA.0", #20
+                               "SPJ.0", #21
+                               #"K", #
+                               "SIGMA", #22
+                               "TAU") #23
+
+# order for pomp/C model:  
+BETA = fullParamSets[,1]
+MU = fullParamSets[,2]
+DELTA = fullParamSets[,3]
+SIGMA = fullParamSets[,22]
+EPSILON = fullParamSets[,5]
+TAU = fullParamSets[,23]
+KAPPA = fullParamSets[,6]
+S = fullParamSets[,7]
+OMEGA = fullParamSets[,8]
+PHI = fullParamSets[,9]
+SUSJ.0 = fullParamSets[,10]
+EXPJ.0 = fullParamSets[,11]
+INFJ.0 = fullParamSets[,12]
+RECJ.0 = fullParamSets[,13]
+SUSA.0 = fullParamSets[,14]
+EXPA.0 = fullParamSets[,15]
+INFA.0 = fullParamSets[,16]
+RECA.0 = fullParamSets[,17]
+PREVA.0 = fullParamSets[,18]
+PREVJ.0 = fullParamSets[,19]
+SPA.0 = fullParamSets[,20]
+SPJ.0 = fullParamSets[,21]
+K = fullParamSets[,4]
+
+paramset<-cbind(BETA,MU,DELTA,SIGMA,K,EPSILON,TAU,KAPPA,S,OMEGA,PHI,
+                SUSJ.0,EXPJ.0,INFJ.0, RECJ.0, SUSA.0,EXPA.0,INFA.0,RECA.0,PREVA.0,PREVJ.0,SPA.0,SPJ.0)
+######################################################################################
+
+#######################################################3
+results<-array(NA,dim=c(300,1,5))
+
+# for one parameter set....
+out1 <-simulate(seir,params=c(paramset[1,]),
+                seed=1493885L,nsim=100,states=T,obs=F,as.data.frame=T) #
+
+outres1 <- out1[seq(from=9126,to=912600,by=9126),] # select last #s
+N1 = array(0,c(100,5)) # same dimensions as No. runs * outputs I want
+for (i in 1:100){ # each stochastic run
+  N1[i,1]<-sum(outres1[i,1:8]) # pop pers
+  N1[i,2]<-(sum(outres1[i,3],outres1[i,7])/sum(outres1[i,1:8]))*100 # prevalence; total
+  N1[i,3]<-((outres1[i,8])/(sum(outres1[i,5:8])))*100 # adult seroprevalence; total
+  N1[i,4]<-ifelse(sum(outres1[i,1:8])>0,1,0) # population extinct for each run
+  N1[i,5]<-ifelse(sum(outres1[i,3],outres1[i,7])>0,1,0) # pathogen extinction for each run
+}
+N1[is.na(N1)]<- 0
+## now average
+M1 = array(0,c(1,5))
+M1[1] = mean(N1[1:100,1]) # population size
+M1[2] = mean(N1[1:100,2]) # prevalence
+M1[3] = mean(N1[1:100,3]) # adult seroprevalence
+M1[4] = mean(N1[1:100,4]) # adult seroprevalence
+M1[5] = mean(N1[1:100,5]) # adult seroprevalence
+rm(out1)
+M1
+results[1,,]<-M1
+results[1,,]
+
+##########################################################33
+# for all parameter sets....
+results<-array(NA,dim=c(300,1,5))
+
+for (j in 1:length(paramset[,1])){
+  out <-simulate(seir,params=c(paramset[j,]),
+                 seed=1493885L,nsim=100,states=T,obs=F,as.data.frame=T) #
+  outres <- out[seq(from=9126,to=912600,by=9126),] # select last #s
+  N = array(0,c(100,5)) # same dimensions as No. runs * outputs I want
+  for (i in 1:100){ # each stochastic run
+    N[i,1]<-sum(outres[i,1:8])
+    N[i,2]<-(sum(outres[i,3],outres[i,7])/sum(outres[i,1:8]))*100 # prevalence; total
+    N[i,3]<-((outres[i,7])/(sum(outres[i,5:8])))*100 # adult seroprevalence; total
+    N[i,4]<-ifelse(sum(outres[i,1:8])>0,1,0) # population extinct for each run
+    N[i,5]<-ifelse(sum(outres[i,3],outres[i,7])>0,1,0) # pathogen extinction for each run
+  }
+  N[is.na(N)]<- 0
+  ## now average
+  M = array(0,c(1,5))
+  M[1] = mean(N[1:100,1]) # population size
+  M[2] = mean(N[1:100,2]) # prevalence
+  M[3] = mean(N[1:100,3]) # adult seroprevalence
+  M[4] = mean(N[1:100,4]) # mean pop extinction
+  M[5] = mean(N[1:100,5]) # mean path extinction
+  rm(out)
+  results[j,,]<-M
+}
+#
+#########################################################33
+## need matrix of results...
+X<-aperm(results,c(1,2,3))
+dim(X)<-c(300,5)
+head(X)
+tail(X)
+infincres<-cbind(round(1/infinc,2),X[,5])
+library(fields)
+colnames(infincres)<-c("sigma","tau","persist")
+library(lattice)
+trellis.par.set("axis.line", list(col="transparent"))
+wireframe(persist~sigma*tau,data=infincres,#drape=T,
+          aspect = c(87/87, 0.5),
+          light.source = c(0,0,0),#shade=T,
+          at=seq(0,1.1,by=0.11),
+          drape=TRUE,col="black",col.regions = colorRampPalette(c("grey95", "lightgrey", "darkgrey", "black"))(20) ,
+          #col.regions=rev(heat.colors(10)),
+          scales=list(arrows=F,cex=1,col="black",font=3,tck=1),
+          xlab=expression(paste(1/sigma)),
+          ylab=expression(paste(1/tau)),
+          zlab = list(label = "Persistence",
+                      font = 1, cex = 1,rot=90),
+          colorkey=list(height=0.5),# T
+          zlim = range(seq(0, 1, by=0.10)))
+
 ######################### rest of this code requires the MLE estimate for the rho and beta params
 ## for LHS parameter set
 ## Calling requisite libraries for parallel computing
@@ -555,7 +962,7 @@ mtext("Population size",side=1,outer=T)
 
 library(lhs)
 
-nspaces=100 ## how many bins/intervals, 100 needed for PRCC
+nspaces=500 ## how many bins/intervals, 100 needed for PRCC
 
 hypercube=randomLHS(n=nspaces, k=9) ## function with N columns
 dimnames(hypercube)[[2]]=c("beta","mu","delta",
@@ -620,7 +1027,7 @@ nonVarying = matrix(c(
   PREVA.0= 0.025, PREVJ.0=0.025 ,
   SPA.0=0.025,SPJ.0=0.025),
               ncol=14,
-              nrow=100,
+              nrow=500,
               byrow=T) #binded with non-varying parameters
 
 
@@ -687,16 +1094,16 @@ paramset<-cbind(BETA,
                 SPJ.0)
 
 ######################################################################################
-results<-array(NA,dim=c(100,1,5))
+results<-array(NA,dim=c(500,1,5))
 
 
 # for one parameter set....
 out1 <-simulate(seir,params=c(paramset[1,]),
-                seed=1493885L,nsim=100,states=T,obs=F,as.data.frame=T) #
+                seed=1493885L,nsim=500,states=T,obs=F,as.data.frame=T) #
 
 outres1 <- out1[seq(from=9126,to=912600,by=9126),] # select last #s
-N1 = array(0,c(100,5)) # same dimensions as No. runs * outputs I want
-for (i in 1:100){ # each stochastic run
+N1 = array(0,c(500,5)) # same dimensions as No. runs * outputs I want
+for (i in 1:500){ # each stochastic run
   N1[i,1]<-sum(outres1[i,1:8]) # pop pers
   N1[i,2]<-(sum(outres1[i,3],outres1[i,7])/sum(outres1[i,1:8]))*100 # prevalence; total
   N1[i,3]<-((outres1[i,8])/(sum(outres1[i,5:8])))*100 # adult seroprevalence; total
@@ -706,11 +1113,11 @@ for (i in 1:100){ # each stochastic run
 N1[is.na(N1)]<- 0
 ## now average
 M1 = array(0,c(1,5))
-M1[1] = mean(N1[1:100,1]) # population size
-M1[2] = mean(N1[1:100,2]) # prevalence
-M1[3] = mean(N1[1:100,3]) # adult seroprevalence
-M1[4] = mean(N1[1:100,4]) # adult seroprevalence
-M1[5] = mean(N1[1:100,5]) # adult seroprevalence
+M1[1] = mean(N1[1:500,1]) # population size
+M1[2] = mean(N1[1:500,2]) # prevalence
+M1[3] = mean(N1[1:500,3]) # adult seroprevalence
+M1[4] = mean(N1[1:500,4]) # adult seroprevalence
+M1[5] = mean(N1[1:500,5]) # adult seroprevalence
 rm(out1)
 M1
 results[1,,]<-M1
@@ -723,14 +1130,14 @@ results[1,,]
 ##
 ##
 # for all parameter sets....
-results<-array(NA,dim=c(100,1,5))
+results<-array(NA,dim=c(500,1,5))
 
 for (j in 1:length(paramset[,1])){
   out <-simulate(seir,params=c(paramset[j,]),
-                 seed=1493885L,nsim=100,states=T,obs=F,as.data.frame=T) #
+                 seed=1493885L,nsim=500,states=T,obs=F,as.data.frame=T) #
   outres <- out[seq(from=9126,to=912600,by=9126),] # select last #s
-  N = array(0,c(100,5)) # same dimensions as No. runs * outputs I want
-  for (i in 1:100){ # each stochastic run
+  N = array(0,c(500,5)) # same dimensions as No. runs * outputs I want
+  for (i in 1:500){ # each stochastic run
     N[i,1]<-sum(outres[i,1:8])
     N[i,2]<-(sum(outres[i,3],outres[i,7])/sum(outres[i,1:8]))*100 # prevalence; total
     N[i,3]<-((outres[i,7])/(sum(outres[i,5:8])))*100 # adult seroprevalence; total
@@ -740,11 +1147,11 @@ for (j in 1:length(paramset[,1])){
   N[is.na(N)]<- 0
   ## now average
   M = array(0,c(1,5))
-  M[1] = mean(N[1:100,1]) # population size
-  M[2] = mean(N[1:100,2]) # prevalence
-  M[3] = mean(N[1:100,3]) # adult seroprevalence
-  M[4] = mean(N[1:100,4]) # mean pop extinction
-  M[5] = mean(N[1:100,5]) # mean path extinction
+  M[1] = mean(N[1:500,1]) # population size
+  M[2] = mean(N[1:500,2]) # prevalence
+  M[3] = mean(N[1:500,3]) # adult seroprevalence
+  M[4] = mean(N[1:500,4]) # mean pop extinction
+  M[5] = mean(N[1:500,5]) # mean path extinction
   rm(out)
   results[j,,]<-M
 }
@@ -756,7 +1163,7 @@ w<-makeCluster(1,type="SOCK") # return to one core
   ############################################################3
 ## need matrix of results...
 X<-aperm(results,c(1,2,3))
-dim(X)<-c(100,5)
+dim(X)<-c(500,5)
 head(X)
 tail(X)
 
@@ -979,31 +1386,35 @@ plot.prcc = function(prcc.obj,alpha=0.05,...){
 }
 
 # prcc with stoch simulation results...
-res<-cbind(X[,1],
+res<-cbind(#X[,1],
            #X[,2],
            #X[,3],
            # X[,4], # pop extinction
            X[,5])
 #res<-as.list(res)
-dimnames(res)[[2]]<-c("Population",
+dimnames(res)[[2]]<-c(#"Population",
                       #"Prevalence",
                       #"Adult seroprevalence",
                       #"Population persistence",
                       "LBV persistence")
-
-# write.csv(res, "results_25yr1000Sens2.csv", row.names=F, na="")
+colnames(res)<-c(#"Population",
+  #"Prevalence",
+  #"Adult seroprevalence",
+  #"Population persistence",
+  "LBV persistence")
+ write.csv(res, "results_25yr1000Sens2_v2.csv", row.names=F, na="")
 
 results=prcc(par.mat=hypercube,model.output=res ## results matrix here...
                ,routine="blower" # NB removed par names so uses symbols, add [par.names="",]
-             ,output.names=c("Population size",
+             ,output.names=c(""#"Population size",
                            # "Prevalence",
                            # "Adult seroprevalence",
                             #"Population persistence",
-                             "Pathogen persistence"
+                            # "Pathogen persistence"
                             ))
 
 plot.prcc(results,ylim=c(-1,1),cex.sub=1.2)
-
+write.csv(results, "prcc_25yr1000Sens2_v2.csv", row.names=T, na="")
 ## all works if enough paramets sets.... [otherwise get singular matrix warning..]
 #########################
 ##
@@ -1066,7 +1477,6 @@ b <-function(t=1,s=30,omega=2,phi=0,k=res){ ## adding birth pulse
 plot(b)
 
 
-
 # Birth pulse function
 B.t = function(t,s,k,omega=2,phi=0) {
   k*sqrt(s/pi)*exp(-s*cos(pi*t*omega-phi)^2)
@@ -1101,7 +1511,7 @@ b <-function(t=1,s=par.plot[17,2],omega=2,phi=0,k=par.plot[17,1]){ ## adding bir
   k*(1/sqrt(kappa*pi)*exp(-x^2/kappa))
 }
 plot(b,xlab="",ylab="",#xaxt="n",yaxt="n",
-     ylim=c(0,15),lwd=2,bty="n")
+     ylim=c(0,15),lwd=1.2,bty="n")
 
 #b <-function(t=1,s=par.plot[15,2],omega=2,phi=0,k=par.plot[15,1]){ ## adding birth pulse
 #  kappa<-1/s
@@ -1115,14 +1525,14 @@ b <-function(t=1,s=par.plot[1,2],omega=2,phi=0,k=par.plot[1,1]){ ## adding birth
   x<-cos(pi*omega*t-phi)
   k*(1/sqrt(kappa*pi)*exp(-x^2/kappa))
 }
-plot(b,add=T,col="black",lty=2,lwd=2)
+plot(b,add=T,col="black",lty=1,lwd=1.2)
 
 b <-function(t=1,s=par.plot[17,2],omega=1,phi=0,k=par.plot[1,1]){ ## adding birth pulse
   kappa<-1/s
   x<-cos(pi*omega*t-phi)
   k*(1/sqrt(kappa*pi)*exp(-x^2/kappa))
 }
-plot(b,add=T,col="darkgrey",lty=1,lwd=2)
+plot(b,add=T,col="red",lty=1,lwd=1.2)
 
 
 b <-function(t=1,s=par.plot[1,2],omega=1,phi=0,k=par.plot[1,1]){ ## adding birth pulse
@@ -1131,12 +1541,12 @@ b <-function(t=1,s=par.plot[1,2],omega=1,phi=0,k=par.plot[1,1]){ ## adding birth
   k*(1/sqrt(kappa*pi)*exp(-x^2/kappa))
 }
 
-plot(b,add=T,col="darkgrey",lty=2,lwd=2)
+plot(b,add=T,col="red",lty=2,lwd=1.2)
 
-legend(x=0.25,y=16,lty=rep(1:2,2),lwd=rep(2,4),
+legend(x=0.25,y=16,lty=rep(1:2,2),lwd=rep(1.2,4),
        legend=c(expression(paste(omega==1, ", k = 1.44, s = 7"),paste(omega==1, ", k = 1.50, s = 167"),
                            paste(omega==2, ", k = 1.44, s = 7"),paste(omega==2, ", k = 1.50, s = 167"))),
-       bty="n",col=c("darkgrey","darkgrey",1,1),cex=0.8)
+       bty="n",col=c("red","red",1,1),cex=0.8)
 
 mtext("1 year",side=1,outer=F,line=3)
 
