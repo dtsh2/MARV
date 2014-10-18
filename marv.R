@@ -1500,9 +1500,9 @@ par.plot<-cbind(res,ss,rep(2,length(ss)),rep(0,length(ss)))
 dimnames(par.plot)[[2]]<-c("k","s","omega","phi")
 par.plot
 
-par(omi=c(1,0.5,0.5,0.5))
+par(omi=c(1,1,0.5,0.5))
 par(mai=c(0.8,0.8,0.8,0.8))
-par(mar=c(1, 1, 1, 1) + 0.1)
+par(mar=c(1, 4, 1, 1) + 0.1)
 par(mfrow=c(1,1))
 
 b <-function(t=1,s=par.plot[17,2],omega=2,phi=0,k=par.plot[17,1]){ ## adding birth pulse
@@ -1510,7 +1510,7 @@ b <-function(t=1,s=par.plot[17,2],omega=2,phi=0,k=par.plot[17,1]){ ## adding bir
   x<-cos(pi*omega*t-phi)
   k*(1/sqrt(kappa*pi)*exp(-x^2/kappa))
 }
-plot(b,xlab="",ylab="",#xaxt="n",yaxt="n",
+plot(b,xlab="",ylab="b(t)",#xaxt="n",yaxt="n",
      ylim=c(0,15),lwd=1.2,bty="n")
 
 #b <-function(t=1,s=par.plot[15,2],omega=2,phi=0,k=par.plot[15,1]){ ## adding birth pulse
