@@ -1328,6 +1328,30 @@ wireframe(persist~sigma*s,data=sincres,#drape=T,
           zlim = range(seq(0, 1, by=0.10)))
 
 ##
+# add plane
+#library(akima)
+trellis.par.set("axis.line", list(col="transparent"))
+wireframe(persist~sigma*s,data=sincres,#drape=T,
+          aspect = c(87/87, 0.5),
+          light.source = c(0,0,0),#shade=T,
+          at=seq(0,1.1,by=0.11),
+          drape=TRUE,col="black",col.regions = colorRampPalette(c("grey95", "lightgrey", "darkgrey", "black"))(20) ,
+          scales=list(arrows=F,cex=1,col="black",font=3,tck=1),
+          xlab=expression(paste(1/sigma)),
+          ylab=expression(paste(s)),
+          zlab = list(label = "Persistence",
+                      font = 1, cex = 1,rot=90),
+          colorkey=list(height=0.5),# T
+          ylim = rev(range(sincres$s)),
+          par.settings=list(layout.heights=list(top.padding=-5,bottom.padding=-5,left.padding=-5,right.padding=-5)),
+          zlim = range(seq(0, 1, by=0.10)),
+panel = function(...)
+{
+  panel.wireframe(...)
+    grid.text("------------------------------------------------", rot=20,x=unit(0.455, "npc"), just=c(0.7,0.65),y=unit(0.725, "npc"),gp=gpar(col = "orange"))
+})
+
+
 ## ~~~~~~~~~~ LHS SAMPLING ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#############
 # NB not testing K - carrying cap, or rate of aging..
 
